@@ -4,11 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.fruitcatchergame.ui.theme.FruitcatchergameTheme
@@ -78,18 +81,71 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+//=====================================
+// COMPOSABLE  PRINCIPAL
+//====================================
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    FruitcatchergameTheme {
-        Greeting("Android")
+fun  FruitcatchergameApp(){
+    var gameState by remember { mutableStateOf(GameState.MENU) }
+    var currentLevel by remember { mutableStateOf(GameLevel.BEGINNER) }
+    var score by remember { mutableStateOf(0) }
+    var lives by remember { mutableStateOf(3) }
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF87CEEB))
+    ){
+        when (gameState){
+            GameState.MENU-> MenuScreen(
+                onStartGame={
+                    gameState = GameState.PLAYING
+                    score = 0
+                    lives = 3
+                }
+            )
+
+            GameState.PLAYING -> GameScreen(
+                currentLevel = currentLevel,
+                score = score,
+                lives = lives,
+                onScoreChanged = { score += it },
+                onLivesChanged = { lives += it },
+                onGameOver = { gameState = GameState.GAME_OVER},
+                onLevelCompleted = {
+                    currentLevel = { nextLevel ->
+                        if (nextLevel != null) {
+                            currentLevel = nextLevel
+                        } else{
+                            gameState = GameState.VICTORY
+                        }
+
+                    }
+                    )
+                    GameState.GAME_OVER -> GameOverScreen(
+                        score = score,
+                        level = currentLevel,
+                        onRestart={
+                            gameState = GameState.PLAYING
+                            currentLevel = GameLevel.BEGINNER
+                            score = 0
+                            lives = 3
+                        },
+                        onMenu = { gameState = GameState.MENU}
+                    )
+                    GameState.VICTORY -> VictoryScreen(
+                            score = score,
+                            onMenu = { gameState = GameState.MENU}
+                        }
+
+                    )
+
+
+                }
+
+
+
+        }
     }
-}
