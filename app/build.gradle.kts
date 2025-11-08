@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.fruitcatchergame"
-    compileSdk = 34  // ← CORREGIDO: antes era version = release(36)
+    compileSdk = 36  // ← CORREGIDO: antes era version = release(34)
 
     defaultConfig {
         applicationId = "com.example.fruitcatchergame"
         minSdk = 24
-        targetSdk = 34  // ← CORREGIDO: antes era 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

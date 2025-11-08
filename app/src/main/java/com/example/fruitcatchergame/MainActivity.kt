@@ -47,7 +47,7 @@ enum class FruitType(val emoji: String, val points: Int, val colorHex: Long) {
 
 enum class GameLevel(
     val number: Int,
-    val name: String,
+    val displayName: String,
     val requiredScore: Int,
     val fruitSpeed: Float,
     val spawnRate: Long,
